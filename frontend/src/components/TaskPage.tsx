@@ -1,4 +1,11 @@
-import { Box, Flex, Input, Spinner, Textarea } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Input,
+  Spinner,
+  Textarea,
+  useToast,
+} from "@chakra-ui/react";
 import { useParams } from "wouter";
 import { useTaskStore } from "../store/taskStore";
 import { useEffect, useState } from "react";
@@ -8,6 +15,7 @@ import { MARGIN_Y } from "../utils/layoutConstants";
 const TaskPage = () => {
   const { fetchTaskById, editTask } = useTaskStore();
   const { id } = useParams();
+  const toast = useToast();
 
   // Local state for task properties
   const [task, setTask] = useState<TaskT | null>(null);
@@ -64,6 +72,19 @@ const TaskPage = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onBlur={() => {
+            if (title.trim() === "") {
+              toast({
+                title: "Empty title",
+                description: "Task title cannot be empty",
+                status: "warning",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom-right",
+              });
+              setTitle(task.title); // Set back the former title to avoid empty title input
+
+              return;
+            }
             if (id) {
               editTask(id, { title });
             }

@@ -10,6 +10,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Textarea,
+  useToast,
 } from "@chakra-ui/react";
 import { useTaskStore } from "../store/taskStore";
 import { useState } from "react";
@@ -23,6 +24,7 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const { addTask } = useTaskStore();
+  const toast = useToast();
 
   const resetState = () => {
     setTitle("");
@@ -30,6 +32,18 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
   };
 
   const onAddTask = async () => {
+    if (title.trim() === "") {
+      toast({
+        title: "Empty title",
+        description: "Task title cannot be empty",
+        status: "warning",
+        duration: 5000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+
+      return;
+    }
     await addTask({ title, description });
     onClose();
     resetState();
@@ -37,7 +51,7 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
-      <ModalOverlay />
+      <ModalOverlay background="blackAlpha.300" />
       <ModalContent
         minWidth="750px"
         maxHeight="calc(100vh - 120px)"
@@ -66,7 +80,7 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
             border="none"
             resize="none"
             height="100%"
-            minHeight="150px"
+            minHeight="100px"
             maxHeight="500px"
             overflowY="auto"
             onInput={(e) => {
