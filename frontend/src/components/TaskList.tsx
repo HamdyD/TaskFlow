@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useTaskStore } from "../store/taskStore";
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { useLocation } from "wouter";
 import { MARGIN_Y } from "../utils/layoutConstants";
 
@@ -20,6 +20,7 @@ const TaskList = () => {
       width="100%"
       margin="4"
       borderRadius="md"
+      border="1px solid lightgray"
       overflowY="auto"
     >
       {tasks.map((task) => {
@@ -30,9 +31,9 @@ const TaskList = () => {
             key={task._id}
             borderBottom="1px solid lightgray"
             width="100%"
-            _hover={{ backgroundColor: "blue.50", cursor: "pointer" }}
+            _hover={{ backgroundColor: "yellow.50", cursor: "pointer" }}
           >
-            {task.title}
+            <Text fontSize="sm">{task.title}</Text>
           </Box>
         );
       })}

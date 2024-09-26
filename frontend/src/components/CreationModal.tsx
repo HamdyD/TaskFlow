@@ -13,16 +13,24 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useTaskStore } from "../store/taskStore";
-import { useState } from "react";
 
 type CreationModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  title: string;
+  setTitle: (newTitle: string) => void;
+  description: string;
+  setDescription: (newTitle: string) => void;
 };
 
-const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+const CreationModal = ({
+  isOpen,
+  onClose,
+  title,
+  setTitle,
+  description,
+  setDescription,
+}: CreationModalProps) => {
   const { addTask } = useTaskStore();
   const toast = useToast();
 
@@ -93,7 +101,7 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
         <Divider />
         <ModalFooter>
           <Button colorScheme="blue" onClick={onAddTask}>
-            Create task
+            Save task
           </Button>
         </ModalFooter>
       </ModalContent>
