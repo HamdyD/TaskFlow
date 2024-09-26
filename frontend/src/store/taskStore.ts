@@ -4,6 +4,7 @@ import {
   getAllTasks,
   updateTask,
   deleteTask,
+  getTaskById,
 } from "../services/taskService";
 import { TaskT } from "../types/taskType";
 import { getErrorMessage } from "../utils/errorUtils";
@@ -13,12 +14,13 @@ type TastkState = {
   isTaskLoading: boolean;
   error: string | null;
   fetchTasks: () => Promise<void>;
+  fetchTaskById: (id: string) => Promise<TaskT | null>;
   addTask: (task: Omit<TaskT, "_id">) => Promise<void>;
   editTask: (id: string, task: Partial<TaskT>) => Promise<void>;
   removeTask: (id: string) => Promise<void>;
 };
 
-export const useTaskStore = create<TastkState>((set) => ({
+export const useTaskStore = create<TastkState>((set, get) => ({
   tasks: [],
   isTaskLoading: false,
   error: null,
@@ -29,6 +31,32 @@ export const useTaskStore = create<TastkState>((set) => ({
       set({ tasks, isTaskLoading: false });
     } catch (error) {
       set({ error: getErrorMessage(error), isTaskLoading: false });
+    }
+  },
+  fetchTaskById: async (id: string) => {
+    const { tasks } = get();
+
+    // Check if the task already exists in the store
+    const existingTask = tasks.find((t) => t._id === id);
+    if (existingTask) {
+      return existingTask;
+    }
+
+    set({ isTaskLoading: true });
+    try {
+      const fetchedTask = await getTaskById(id);
+
+      set({
+        tasks: [...tasks, fetchedTask],
+        isTaskLoading: false,
+      });
+      return fetchedTask;
+    } catch (error) {
+      set({
+        error: getErrorMessage(error),
+        isTaskLoading: false,
+      });
+      return null;
     }
   },
   addTask: async (task: Omit<TaskT, "_id">) => {

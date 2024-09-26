@@ -8,6 +8,11 @@ export const getAllTasks = async (): Promise<TaskT[]> => {
   return response.data;
 };
 
+export const getTaskById = async (id: string): Promise<TaskT> => {
+  const response = await axios.get(`${API_URL}/${id}`);
+  return response.data;
+};
+
 export const createTask = async (task: Omit<TaskT, "_id">): Promise<TaskT> => {
   const response = await axios.post(API_URL, task);
   return response.data;

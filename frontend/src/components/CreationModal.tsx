@@ -36,14 +36,18 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} size="xl" scrollBehavior="inside">
       <ModalOverlay />
-      <ModalContent minWidth="750px">
+      <ModalContent
+        minWidth="750px"
+        maxHeight="calc(100vh - 120px)"
+        overflow="hidden"
+      >
         <ModalHeader fontSize="xs" fontWeight="normal">
           New issue
         </ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody display="flex" flexDirection="column" overflowY="auto">
           <Input
             onChange={(e) => setTitle(e.target.value)}
             value={title}
@@ -60,6 +64,16 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
             placeholder="Add description..."
             _placeholder={{ opacity: 0.6 }}
             border="none"
+            resize="none"
+            height="100%"
+            minHeight="150px"
+            maxHeight="500px"
+            overflowY="auto"
+            onInput={(e) => {
+              // Auto-resize the textarea based on content
+              e.currentTarget.style.height = "auto"; // Reset height to auto
+              e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`; // Set height to scrollHeight
+            }}
           />
         </ModalBody>
         <Divider />
