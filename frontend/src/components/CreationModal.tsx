@@ -11,6 +11,8 @@ import {
   ModalOverlay,
   Textarea,
 } from "@chakra-ui/react";
+import { useTaskStore } from "../store/taskStore";
+import { useState } from "react";
 
 type CreationModalProps = {
   isOpen: boolean;
@@ -18,6 +20,21 @@ type CreationModalProps = {
 };
 
 const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const { addTask } = useTaskStore();
+
+  const resetState = () => {
+    setTitle("");
+    setDescription("");
+  };
+
+  const onAddTask = async () => {
+    await addTask({ title, description });
+    onClose();
+    resetState();
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -28,6 +45,8 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
         <ModalCloseButton />
         <ModalBody>
           <Input
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
             placeholder="Task title"
             _placeholder={{ opacity: 0.6, fontWeight: "bold" }}
             marginBottom="2"
@@ -36,6 +55,8 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
             border="none"
           />
           <Textarea
+            onChange={(e) => setDescription(e.target.value)}
+            value={description}
             placeholder="Add description..."
             _placeholder={{ opacity: 0.6 }}
             border="none"
@@ -43,7 +64,9 @@ const CreationModal = ({ isOpen, onClose }: CreationModalProps) => {
         </ModalBody>
         <Divider />
         <ModalFooter>
-          <Button colorScheme="blue">Create task</Button>
+          <Button colorScheme="blue" onClick={onAddTask}>
+            Create task
+          </Button>
         </ModalFooter>
       </ModalContent>
     </Modal>
