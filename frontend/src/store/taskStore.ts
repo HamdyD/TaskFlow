@@ -15,7 +15,7 @@ type TastkState = {
   error: string | null;
   fetchTasks: () => Promise<void>;
   fetchTaskById: (id: string) => Promise<TaskT | null>;
-  addTask: (task: Omit<TaskT, "_id">) => Promise<void>;
+  addTask: (task: Omit<TaskT, "id">) => Promise<void>;
   editTask: (id: string, task: Partial<TaskT>) => Promise<void>;
   removeTask: (id: string) => Promise<void>;
 };
@@ -37,7 +37,7 @@ export const useTaskStore = create<TastkState>((set, get) => ({
     const { tasks } = get();
 
     // Check if the task already exists in the store
-    const existingTask = tasks.find((t) => t._id === id);
+    const existingTask = tasks.find((t) => t.id === id);
     if (existingTask) {
       return existingTask;
     }
@@ -59,7 +59,7 @@ export const useTaskStore = create<TastkState>((set, get) => ({
       return null;
     }
   },
-  addTask: async (task: Omit<TaskT, "_id">) => {
+  addTask: async (task: Omit<TaskT, "id">) => {
     set({ isTaskLoading: true });
     try {
       const newTask = await createTask(task);
@@ -76,7 +76,7 @@ export const useTaskStore = create<TastkState>((set, get) => ({
     try {
       const updatedTask = await updateTask(id, task);
       set((state) => ({
-        tasks: state.tasks.map((t) => (t._id === id ? updatedTask : t)),
+        tasks: state.tasks.map((t) => (t.id === id ? updatedTask : t)),
         isTaskLoading: false,
       }));
     } catch (error) {
@@ -88,7 +88,7 @@ export const useTaskStore = create<TastkState>((set, get) => ({
     try {
       await deleteTask(id);
       set((state) => ({
-        tasks: state.tasks.filter((t) => t._id !== id),
+        tasks: state.tasks.filter((t) => t.id !== id),
         isTaskLoading: false,
       }));
     } catch (error) {

@@ -26,9 +26,9 @@ const TaskList = () => {
       {tasks.map((task) => {
         return (
           <Box
-            onClick={() => setLocation(`tasks/${task._id}`)}
+            onClick={() => setLocation(`tasks/${task.id}`)}
             padding="4"
-            key={task._id}
+            key={task.id}
             borderBottom="1px solid lightgray"
             width="100%"
             _hover={{ backgroundColor: "yellow.50", cursor: "pointer" }}

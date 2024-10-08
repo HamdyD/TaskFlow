@@ -1,7 +1,7 @@
 import axios from "axios";
 import { TaskT } from "../types/taskType";
 
-const API_URL = "http://localhost:3000/api/tasks";
+const API_URL = "http://localhost:3000/tasks";
 
 export const getAllTasks = async (): Promise<TaskT[]> => {
   const response = await axios.get(API_URL);
@@ -13,7 +13,7 @@ export const getTaskById = async (id: string): Promise<TaskT> => {
   return response.data;
 };
 
-export const createTask = async (task: Omit<TaskT, "_id">): Promise<TaskT> => {
+export const createTask = async (task: Omit<TaskT, "id">): Promise<TaskT> => {
   const response = await axios.post(API_URL, task);
   return response.data;
 };
