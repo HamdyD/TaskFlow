@@ -1,8 +1,8 @@
-const Task = require("../models/task");
+const taskService = require("../services/taskService");
 
 exports.getAllTasks = async (_, res) => {
   try {
-    const tasks = await Task.findAll();
+    const tasks = await taskService.getAllTasks();
     res.status(200).json(tasks);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -12,7 +12,7 @@ exports.getAllTasks = async (_, res) => {
 exports.getTaskById = async (req, res) => {
   try {
     const { id } = req.params;
-    const task = await Task.findByPk(id);
+    const task = await taskService.getTaskById(id);
 
     if (!task) {
       return res.status(404).json({ message: "Task not found" });
@@ -26,7 +26,7 @@ exports.getTaskById = async (req, res) => {
 
 exports.createTask = async (req, res) => {
   try {
-    const task = await Task.create(req.body);
+    const task = await taskService.createTask(req.body);
     res.status(201).json(task);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -36,15 +36,7 @@ exports.createTask = async (req, res) => {
 exports.updateTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const [updatedRowCount, [updatedTask]] = await Task.update(req.body, {
-      where: { id },
-      returning: true, // Ensures we get the updated row
-    });
-
-    if (!updatedRowCount) {
-      res.status(404).json({ message: "Task not found" });
-    }
-
+    const updatedTask = await taskService.updateTask(id, req.body);
     res.status(200).json(updatedTask);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -54,12 +46,8 @@ exports.updateTask = async (req, res) => {
 exports.deleteTask = async (req, res) => {
   try {
     const { id } = req.params;
-    const deletedRows = await Task.destroy({ where: { id } });
-
-    if (deletedRows === 0) {
-      res.status(404).json({ message: "Task not found" });
-    }
-    res.status(200).json({ message: "Task deleted successfully" });
+    const message = await taskService.deleteTask(id);
+    res.status(200).json(message);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
