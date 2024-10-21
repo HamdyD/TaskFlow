@@ -1,16 +1,20 @@
 import {
   Box,
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
   Flex,
   Input,
   Spinner,
   Textarea,
   useToast,
 } from "@chakra-ui/react";
-import { useParams } from "wouter";
+import { Link, useParams } from "wouter";
 import { useTaskStore } from "../store/taskStore";
 import { useEffect, useState } from "react";
 import { TaskT } from "../types/taskType";
 import { MARGIN_Y } from "../utils/layoutConstants";
+import { ChevronRightIcon } from "@chakra-ui/icons";
 
 const TaskPage = () => {
   const { fetchTaskById, editTask } = useTaskStore();
@@ -60,7 +64,25 @@ const TaskPage = () => {
       margin="4"
       borderRadius="md"
       overflowY="auto"
+      border="1px solid lightgray"
     >
+      <Box
+        paddingX="4"
+        paddingY="2"
+        fontSize="sm"
+        borderBottom="1px solid lightgray"
+        color="gray.500"
+      >
+        <Breadcrumb separator={<ChevronRightIcon color="gray.500" />}>
+          <BreadcrumbItem>
+            <Link to="/tasks">All issues</Link>
+          </BreadcrumbItem>
+
+          <BreadcrumbItem isCurrentPage>
+            <BreadcrumbLink>Issue-{task?.id} </BreadcrumbLink>
+          </BreadcrumbItem>
+        </Breadcrumb>
+      </Box>
       <Box
         width="calc(100% - 120px)"
         maxWidth="76ch"
