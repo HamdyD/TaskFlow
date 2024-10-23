@@ -3,5 +3,5 @@ export const getErrorMessage = (error: unknown) => {
     return error.message;
   }
 
-  return `An unknown error occured: ${error}`;
+  return `An unknown error occurred: ${error}`;
 };

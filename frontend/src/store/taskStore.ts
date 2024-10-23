@@ -9,7 +9,7 @@ import {
 import { TaskT } from "../types/taskType";
 import { getErrorMessage } from "../utils/errorUtils";
 
-type TastkState = {
+type TaskState = {
   tasks: TaskT[];
   isTaskLoading: boolean;
   error: string | null;
@@ -20,7 +20,7 @@ type TastkState = {
   removeTask: (id: string) => Promise<void>;
 };
 
-export const useTaskStore = create<TastkState>((set, get) => ({
+export const useTaskStore = create<TaskState>((set, get) => ({
   tasks: [],
   isTaskLoading: false,
   error: null,
@@ -47,7 +47,9 @@ export const useTaskStore = create<TastkState>((set, get) => ({
       const fetchedTask = await getTaskById(id);
 
       set({
-        tasks: [...tasks, fetchedTask],
+        tasks: tasks.map((task) =>
+          task.id === fetchedTask.id ? fetchedTask : task
+        ), // Update the existing task if found, otherwise leave it unchanged
         isTaskLoading: false,
       });
       return fetchedTask;
