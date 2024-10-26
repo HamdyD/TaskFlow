@@ -5,12 +5,13 @@ import {
   CheckCircleIcon,
   RepeatIcon,
   SmallCloseIcon,
-  TimeIcon,
   WarningIcon,
 } from "@chakra-ui/icons";
 import { Priority, Status } from "../constants/propertiesConstants";
-import { BsCircle, BsThreeDots } from "react-icons/bs";
+import { BsThreeDots } from "react-icons/bs";
 import { AiOutlineCloseCircle } from "react-icons/ai";
+import { FaRegCircle } from "react-icons/fa";
+import { BiLoaderCircle } from "react-icons/bi";
 
 export const getPriorityIcon = (priority: Priority) => {
   switch (priority) {
@@ -30,9 +31,9 @@ export const getPriorityIcon = (priority: Priority) => {
 export const getStatusIcon = (status: Status) => {
   switch (status) {
     case Status.Backlog:
-      return TimeIcon;
+      return BiLoaderCircle;
     case Status.ToDo:
-      return BsCircle;
+      return FaRegCircle;
     case Status.InProgress:
       return RepeatIcon;
     case Status.Done:
@@ -41,5 +42,22 @@ export const getStatusIcon = (status: Status) => {
       return AiOutlineCloseCircle;
     default:
       return SmallCloseIcon;
+  }
+};
+
+export const getStatusColor = (status: Status) => {
+  switch (status) {
+    case Status.Backlog:
+      return "gray.400";
+    case Status.ToDo:
+      return "blue.400";
+    case Status.InProgress:
+      return "yellow.400";
+    case Status.Done:
+      return "green.500";
+    case Status.Canceled:
+      return "gray.600";
+    default:
+      return "gray.500";
   }
 };

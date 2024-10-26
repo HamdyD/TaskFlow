@@ -15,7 +15,11 @@ import {
 } from "../constants/propertiesConstants";
 import { TaskT } from "../types/taskType";
 import { useTaskStore } from "../store/taskStore";
-import { getPriorityIcon, getStatusIcon } from "../utils/iconUtils";
+import {
+  getPriorityIcon,
+  getStatusColor,
+  getStatusIcon,
+} from "../utils/iconUtils";
 
 type TaskDetailsSidebarProps = {
   task: TaskT;
@@ -43,13 +47,15 @@ const TaskDetailsSidebar = ({ task }: TaskDetailsSidebarProps) => {
             variant="ghost"
             textAlign="left"
             fontWeight="normal"
-          >
-            {
-              <>
-                <Icon as={getStatusIcon(task?.status)} marginRight="8px" />
-                {task?.status}
-              </>
+            leftIcon={
+              <Icon
+                as={getStatusIcon(task.status)}
+                color={getStatusColor(task.status)}
+                marginRight="2"
+              />
             }
+          >
+            {task.status}
           </MenuButton>
           <MenuList>
             {STATUS_OPTIONS.map((status) => {
@@ -59,7 +65,11 @@ const TaskDetailsSidebar = ({ task }: TaskDetailsSidebarProps) => {
                   key={status}
                   onClick={() => editTask(task.id, { status })}
                 >
-                  <Icon as={PriorityIcon} marginRight="8px" />
+                  <Icon
+                    as={PriorityIcon}
+                    color={getStatusColor(status)}
+                    marginRight="2"
+                  />
                   {status}
                 </MenuItem>
               );
@@ -69,17 +79,15 @@ const TaskDetailsSidebar = ({ task }: TaskDetailsSidebarProps) => {
         <Menu>
           <MenuButton
             as={Button}
+            leftIcon={
+              <Icon as={getPriorityIcon(task?.priority)} marginRight="2" />
+            }
             size="sm"
             variant="ghost"
             textAlign="left"
             fontWeight="normal"
           >
-            {
-              <>
-                <Icon as={getPriorityIcon(task?.priority)} marginRight="8px" />
-                {task?.priority}
-              </>
-            }
+            {task?.priority}
           </MenuButton>
           <MenuList>
             {PRIORITY_OPTIONS.map((priority) => {
@@ -89,7 +97,7 @@ const TaskDetailsSidebar = ({ task }: TaskDetailsSidebarProps) => {
                   key={priority}
                   onClick={() => editTask(task.id, { priority })}
                 >
-                  <Icon as={PriorityIcon} marginRight="8px" />
+                  <Icon as={PriorityIcon} marginRight="2" />
                   {priority}
                 </MenuItem>
               );

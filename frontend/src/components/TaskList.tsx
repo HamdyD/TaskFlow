@@ -1,8 +1,13 @@
 import { useEffect } from "react";
 import { useTaskStore } from "../store/taskStore";
-import { Box, Flex, Skeleton, Text } from "@chakra-ui/react";
+import { Box, Flex, HStack, Icon, Skeleton, Text } from "@chakra-ui/react";
 import { useLocation } from "wouter";
 import { MARGIN_Y } from "../utils/layoutConstants";
+import {
+  getPriorityIcon,
+  getStatusColor,
+  getStatusIcon,
+} from "../utils/iconUtils";
 
 const TaskList = () => {
   const { fetchTasks, tasks, isTaskLoading } = useTaskStore();
@@ -41,16 +46,24 @@ const TaskList = () => {
       ) : (
         tasks.map((task) => {
           return (
-            <Box
+            <HStack
               onClick={() => setLocation(`tasks/${task.id}`)}
               padding="4"
+              gap="4"
+              fontSize="sm"
               key={task?.id}
               borderBottom="1px solid lightgray"
               width="100%"
               _hover={{ backgroundColor: "yellow.50", cursor: "pointer" }}
             >
-              <Text fontSize="sm">{task.title}</Text>
-            </Box>
+              <Icon as={getPriorityIcon(task.priority)} />
+              <Text>Issue-{task.id}</Text>
+              <Icon
+                as={getStatusIcon(task.status)}
+                color={getStatusColor(task.status)}
+              />
+              <Text>{task.title}</Text>
+            </HStack>
           );
         })
       )}
