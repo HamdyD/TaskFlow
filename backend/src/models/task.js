@@ -15,6 +15,11 @@ const Task = sequelize.define("Task", {
     values: ["No priority", "Urgent", "High", "Medium", "Low"],
     defaultValue: "No priority",
   },
+  status: {
+    type: DataTypes.ENUM,
+    values: ["Backlog", "To do", "In Progress", "Done", "Canceled"],
+    defaultValue: "Backlog",
+  },
 });
 
 module.exports = Task;

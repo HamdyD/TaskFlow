@@ -1,11 +1,4 @@
 import {
-  ArrowDownIcon,
-  ArrowForwardIcon,
-  ArrowUpIcon,
-  SmallCloseIcon,
-  WarningIcon,
-} from "@chakra-ui/icons";
-import {
   Button,
   Flex,
   Icon,
@@ -14,31 +7,21 @@ import {
   MenuItem,
   MenuList,
   Text,
+  VStack,
 } from "@chakra-ui/react";
-import { PRIORITY_OPTIONS } from "../constants/propertiesConstants";
+import {
+  PRIORITY_OPTIONS,
+  STATUS_OPTIONS,
+} from "../constants/propertiesConstants";
 import { TaskT } from "../types/taskType";
 import { useTaskStore } from "../store/taskStore";
+import { getPriorityIcon, getStatusIcon } from "../utils/iconUtils";
 
 type TaskDetailsSidebarProps = {
   task: TaskT;
 };
 const TaskDetailsSidebar = ({ task }: TaskDetailsSidebarProps) => {
   const { editTask } = useTaskStore();
-
-  const getPriorityIcon = (priority: string) => {
-    switch (priority) {
-      case "Urgent":
-        return WarningIcon;
-      case "High":
-        return ArrowUpIcon;
-      case "Medium":
-        return ArrowForwardIcon;
-      case "Low":
-        return ArrowDownIcon;
-      default:
-        return SmallCloseIcon; // No priority
-    }
-  };
 
   return (
     <Flex
@@ -52,36 +35,68 @@ const TaskDetailsSidebar = ({ task }: TaskDetailsSidebarProps) => {
       <Text fontSize="sm" marginBottom="4">
         Properties
       </Text>
-      <Menu>
-        <MenuButton
-          as={Button}
-          size="sm"
-          variant="ghost"
-          textAlign="left"
-          fontWeight="normal"
-        >
-          {
-            <>
-              <Icon as={getPriorityIcon(task?.priority)} marginRight="8px" />
-              {task?.priority}
-            </>
-          }
-        </MenuButton>
-        <MenuList>
-          {PRIORITY_OPTIONS.map((priority) => {
-            const PriorityIcon = getPriorityIcon(priority);
-            return (
-              <MenuItem
-                key={priority}
-                onClick={() => editTask(task.id, { priority })}
-              >
-                <Icon as={PriorityIcon} marginRight="8px" />
-                {priority}
-              </MenuItem>
-            );
-          })}
-        </MenuList>
-      </Menu>
+      <VStack alignItems="left" gap="2">
+        <Menu>
+          <MenuButton
+            as={Button}
+            size="sm"
+            variant="ghost"
+            textAlign="left"
+            fontWeight="normal"
+          >
+            {
+              <>
+                <Icon as={getStatusIcon(task?.status)} marginRight="8px" />
+                {task?.status}
+              </>
+            }
+          </MenuButton>
+          <MenuList>
+            {STATUS_OPTIONS.map((status) => {
+              const PriorityIcon = getStatusIcon(status);
+              return (
+                <MenuItem
+                  key={status}
+                  onClick={() => editTask(task.id, { status })}
+                >
+                  <Icon as={PriorityIcon} marginRight="8px" />
+                  {status}
+                </MenuItem>
+              );
+            })}
+          </MenuList>
+        </Menu>
+        <Menu>
+          <MenuButton
+            as={Button}
+            size="sm"
+            variant="ghost"
+            textAlign="left"
+            fontWeight="normal"
+          >
+            {
+              <>
+                <Icon as={getPriorityIcon(task?.priority)} marginRight="8px" />
+                {task?.priority}
+              </>
+            }
+          </MenuButton>
+          <MenuList>
+            {PRIORITY_OPTIONS.map((priority) => {
+              const PriorityIcon = getPriorityIcon(priority);
+              return (
+                <MenuItem
+                  key={priority}
+                  onClick={() => editTask(task.id, { priority })}
+                >
+                  <Icon as={PriorityIcon} marginRight="8px" />
+                  {priority}
+                </MenuItem>
+              );
+            })}
+          </MenuList>
+        </Menu>
+      </VStack>
     </Flex>
   );
 };
