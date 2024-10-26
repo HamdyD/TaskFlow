@@ -10,6 +10,11 @@ const Task = sequelize.define("Task", {
     type: DataTypes.STRING,
     allowNull: true,
   },
+  priority: {
+    type: DataTypes.ENUM,
+    values: ["No priority", "Urgent", "High", "Medium", "Low"],
+    defaultValue: "No priority",
+  },
 });
 
 module.exports = Task;

@@ -1,5 +1,8 @@
+import { Priority } from "../constants/propertiesConstants";
+
 export type TaskT = {
-  id: string;
+  id: number;
   title: string;
   description?: string;
+  priority: Priority;
 };

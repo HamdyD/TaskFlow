@@ -14,10 +14,10 @@ type TaskState = {
   isTaskLoading: boolean;
   error: string | null;
   fetchTasks: () => Promise<void>;
-  fetchTaskById: (id: string) => Promise<TaskT | null>;
+  fetchTaskById: (id: number) => Promise<TaskT | null>;
   addTask: (task: Omit<TaskT, "id">) => Promise<void>;
-  editTask: (id: string, task: Partial<TaskT>) => Promise<void>;
-  removeTask: (id: string) => Promise<void>;
+  editTask: (id: number, task: Partial<TaskT>) => Promise<void>;
+  removeTask: (id: number) => Promise<void>;
 };
 
 export const useTaskStore = create<TaskState>((set, get) => ({
@@ -33,11 +33,11 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       set({ error: getErrorMessage(error), isTaskLoading: false });
     }
   },
-  fetchTaskById: async (id: string) => {
+  fetchTaskById: async (id: number) => {
     const { tasks } = get();
 
     // Check if the task already exists in the store
-    const existingTask = tasks.find((t) => t.id === id);
+    const existingTask = tasks.find((t) => t.id === Number(id));
     if (existingTask) {
       return existingTask;
     }
@@ -47,9 +47,11 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       const fetchedTask = await getTaskById(id);
 
       set({
-        tasks: tasks.map((task) =>
-          task.id === fetchedTask.id ? fetchedTask : task
-        ), // Update the existing task if found, otherwise leave it unchanged
+        tasks: tasks.some((task) => task.id === fetchedTask.id)
+          ? tasks.map((task) =>
+              task.id === fetchedTask.id ? fetchedTask : task
+            )
+          : [...tasks, fetchedTask],
         isTaskLoading: false,
       });
       return fetchedTask;
@@ -73,19 +75,17 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       set({ error: getErrorMessage(error), isTaskLoading: false });
     }
   },
-  editTask: async (id: string, task: Partial<TaskT>) => {
-    set({ isTaskLoading: true });
+  editTask: async (id: number, task: Partial<TaskT>) => {
     try {
       const updatedTask = await updateTask(id, task);
       set((state) => ({
         tasks: state.tasks.map((t) => (t.id === id ? updatedTask : t)),
-        isTaskLoading: false,
       }));
     } catch (error) {
-      set({ error: getErrorMessage(error), isTaskLoading: false });
+      set({ error: getErrorMessage(error) });
     }
   },
-  removeTask: async (id: string) => {
+  removeTask: async (id: number) => {
     set({ isTaskLoading: true });
     try {
       await deleteTask(id);

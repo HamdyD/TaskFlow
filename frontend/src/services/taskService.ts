@@ -8,7 +8,7 @@ export const getAllTasks = async (): Promise<TaskT[]> => {
   return response.data;
 };
 
-export const getTaskById = async (id: string): Promise<TaskT> => {
+export const getTaskById = async (id: number): Promise<TaskT> => {
   const response = await axios.get(`${API_URL}/${id}`);
   return response.data;
 };
@@ -19,13 +19,13 @@ export const createTask = async (task: Omit<TaskT, "id">): Promise<TaskT> => {
 };
 
 export const updateTask = async (
-  id: string,
+  id: number,
   updatedTask: Partial<TaskT>
 ): Promise<TaskT> => {
   const response = await axios.put(`${API_URL}/${id}`, updatedTask);
   return response.data;
 };
 
-export const deleteTask = async (id: string): Promise<void> => {
+export const deleteTask = async (id: number): Promise<void> => {
   await axios.delete(`${API_URL}/${id}`);
 };

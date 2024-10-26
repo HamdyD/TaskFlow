@@ -6,7 +6,11 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "serve": "node src/server.js",
-    "dev": "nodemon src/server.js"
+    "dev": "nodemon src/server.js",
+    "migration:generate": "npx sequelize-cli migration:generate --name explicit-name",
+    "migrate": "npx sequelize-cli db:migrate --config src/config/config.js",
+    "migrate:undo": "npx sequelize-cli db:migrate:undo --config src/config/config.js",
+    "migrate:undo:all": "npx sequelize-cli db:migrate:undo:all"
   },
   "keywords": [],
   "author": "",
